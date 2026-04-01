@@ -53,7 +53,7 @@ function LoginModel({ open, onClose }) {
                                 className='absolute -bottom-32 -right-32 w-80 h-80 bg-blue-500/25 blur-[140px]'
                             />
                             <button
-                                className='absolute top-5 right-5 z-20 text-zinc-400 hover:text-white transition text-lg'
+                                className='absolute top-5 right-5 z-20 text-zinc-400 hover:text-white transition text-lg hover:cursor-pointer'
                                 onClick={onClose}
                             >
                                 x
@@ -67,7 +67,7 @@ function LoginModel({ open, onClose }) {
                                 <motion.button
                                     whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.96 }}
-                                    className='group relative max-w-fit px-10 h-13 rounded-xl bg-white text-black font-semibold shadow-xl overflow-hidden'
+                                    className='group relative max-w-fit px-10 h-13 rounded-xl bg-white text-black hover:cursor-pointer font-semibold shadow-xl overflow-hidden'
                                     onClick={handleGoogleAuth}
                                 >
                                     <div className='absolute inset-0 bg-gradient-to-r from-zinc-100 towhite opacity-0 group-hover:opacity-100 transition'></div>

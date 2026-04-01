@@ -28,7 +28,7 @@ const Home = () => {
                         <div className='hidden md:inline text-sm text-zinc-400 hover:text-white cursor-pointer'>
                             Pricing
                         </div>
-                        <button className='px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm'
+                        <button className='px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm hover:cursor-pointer'
                         onClick={()=>setOpenLogin(true)}
                         >
                             Get Started
@@ -58,7 +58,7 @@ const Home = () => {
                     initial={{ opacity: 0, }}
                     animate={{ opacity: 1, }}
                     transition={{ duration: 2 }}
-                    className='px-10 py-4 rounded-xl bg-white text-black text-lg font-semibold hover:scale-105 transition mt-12 '
+                    className='px-10 py-4 rounded-xl bg-white text-black text-lg font-semibold hover:scale-105 transition mt-12 hover:cursor-pointer'
                     onClick={()=>setOpenLogin(true)}
                     >
                     Get Started
