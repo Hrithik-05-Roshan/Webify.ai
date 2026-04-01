@@ -5,6 +5,7 @@ import connectDb from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import userRouter from "./routes/user.routes.js";
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cors({
     credentials:true
 }))
 app.use("/api/auth", authRouter)
+app.use("/api/user", userRouter)
 
 app.listen(port,()=>{
     console.log("server started");
