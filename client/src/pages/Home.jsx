@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import LoginModel from '../components/LoginModel';
+import { useSelector } from 'react-redux';
+import { Coins } from "lucide-react";
 
 const Home = () => {
 
@@ -11,6 +13,9 @@ const Home = () => {
     ]
 
     const [openLogin, setOpenLogin] = useState(false)
+    const { userData } = useSelector(state => state.user)
+    const [openProfile, setOpenProfile]=useState(false)
+
 
     return (
         <div className='relative min-h-screen bg-[#040404] text-white overflow-hidden '>
@@ -28,11 +33,27 @@ const Home = () => {
                         <div className='hidden md:inline text-sm text-zinc-400 hover:text-white cursor-pointer'>
                             Pricing
                         </div>
-                        <button className='px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm hover:cursor-pointer'
-                        onClick={()=>setOpenLogin(true)}
+
+                        {userData && <div className='flex items-center justify-between gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm cursor-pointer hover:bg-white/10 transition'>
+                            <Coins size={18} className='text-yellow-400' />
+                            <span className='text-zinc-300'>Credits</span>
+                            <span className=''>{userData.credits}</span>
+                            <span className='font-bold text-lg'>+</span>
+                        </div>}
+                        {!userData ? <button className='px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm hover:cursor-pointer'
+                            onClick={() => setOpenLogin(true)}
                         >
                             Get Started
-                        </button>
+                        </button> :
+                            <div className='relative'>
+                                <button className='flex items-center' onClick={()=>setOpenProfile(!openProfile)}>
+                                    <img src={userData.avatar || `https://ui-avatars.com/api/?name=${userData.name}`} alt="/profileimage" className='w-10 h-10 rounded-full border border-white/20 object-cover' />
+                                </button>
+
+
+                            </div>
+                        }
+
                     </div>
                 </div>
             </motion.div>
@@ -59,8 +80,8 @@ const Home = () => {
                     animate={{ opacity: 1, }}
                     transition={{ duration: 2 }}
                     className='px-10 py-4 rounded-xl bg-white text-black text-lg font-semibold hover:scale-105 transition mt-12 hover:cursor-pointer'
-                    onClick={()=>setOpenLogin(true)}
-                    >
+                    onClick={() => setOpenLogin(true)}
+                >
                     Get Started
                 </motion.button>
             </section>
@@ -89,7 +110,7 @@ const Home = () => {
                 &copy; {new Date().getFullYear()} Webify.ai
             </footer>
 
-            {openLogin && <LoginModel open={openLogin} onClose={()=>setOpenLogin(false)}/>}
+            {openLogin && <LoginModel open={openLogin} onClose={() => setOpenLogin(false)} />}
 
         </div>
     )
