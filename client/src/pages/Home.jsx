@@ -6,6 +6,7 @@ import { Coins } from "lucide-react";
 import axios from 'axios';
 import { serverUrl } from '../App';
 import { setUserData } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
 
@@ -19,6 +20,7 @@ const Home = () => {
     const { userData } = useSelector(state => state.user)
     const [openProfile, setOpenProfile] = useState(false)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const handleLogout = async () => {
         try {
             await axios.get(`${serverUrl}/api/auth/logout`, {
@@ -82,7 +84,7 @@ const Home = () => {
                                                     <span className=''>{userData.credits}</span>
                                                     <span className='font-bold text-lg'>+</span>
                                                 </button>
-                                                <button className='w-full px-4 py-3 text-left text-sm hover:bg-white/5 cursor-pointer'>Dashboard</button>
+                                                <button className='w-full px-4 py-3 text-left text-sm hover:bg-white/5 cursor-pointer' onClick={()=>navigate("/dashboard")}>Dashboard</button>
                                                 <button className='w-full px-4 py-3 text-left text-sm text-red-400 hover:bg-white/5 cursor-pointer' onClick={handleLogout}>Logout</button>
                                             </motion.div>
                                         </>
@@ -118,9 +120,9 @@ const Home = () => {
                     animate={{ opacity: 1, }}
                     transition={{ duration: 2 }}
                     className='px-10 py-4 rounded-xl bg-white text-black text-lg font-semibold hover:scale-105 transition mt-12 hover:cursor-pointer'
-                    onClick={() => setOpenLogin(true)}
+                    onClick={() => navigate("/dashboard")}
                 >
-                    Get Started
+                    {userData ? "Go to Dashboard" : "Get Started"}
                 </motion.button>
             </section>
 
