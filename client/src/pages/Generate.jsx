@@ -31,7 +31,7 @@ function Generate() {
           </p>
         </motion.div>
         <div className='mb-14 '>
-          <h1 className='text-xl font-semibold mb-2'>Describe your website</h1>
+          <h1 className='text-xl font-semibold mb-2 ml-5'>Describe your website</h1>
           <div>
             <textarea 
             name="" 
