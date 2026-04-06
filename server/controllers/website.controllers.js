@@ -1,4 +1,7 @@
-import { generateResponse } from "../config/openRouter";
+import { generateResponse } from "../config/openRouter.js";
+import User from "../models/user.model.js";
+import Website from "../models/website.model.js";
+import extractJson from "../utils/extractJson.js";
 
 const masterPrompt = `YOU ARE A PRINCIPAL FRONTEND ARCHITECT
 AND A SENIOR UI/UX ENGINEER
@@ -153,15 +156,56 @@ export const generateWebsite = async (res, req) => {
     if (!prompt) {
       return res.status(400).json({ message: "prompt is required" });
     }
-    const user = req.user;
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(400).json({ message: "user not found!" });
     }
+    if (user.credits < 50) {
+      return res
+        .status(400)
+        .json({ message: "you don't have enough credits!" });
+    }
+
     const finalPrompt = masterPrompt.replace("USER_PROMPT", prompt);
 
     let raw = "";
-    raw = await generateResponse(finalPrompt);
+    let parsed = null;
+    for (let i = 0; i < 2 && !parsed; i++) {
+      raw = await generateResponse(finalPrompt);
+      parsed = await extractJson(raw);
+      if (!parsed) {
+        raw = await generateResponse(finalPrompt + "\n\nRETURN ONLY RAW JSON");
+        parsed = await extractJson(raw);
+      }
+    }
+    if (!parsed.code) {
+      console.log("AI returned invalid response");
+      return res.status(400).json({ message: "AI returned invalid response" });
+    }
 
-    
-  } catch (error) {}
+    const website = await Website.create({
+      user: user._id,
+      title: prompt.slice(0, 60),
+      latestcode: parsed.code,
+      conversation: [
+        {
+          role: "ai",
+          content: parsed.message,
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+    user.credits = user.credits - 50;
+    await user.save();
+
+    return res.status(201).json({
+      websiteId: website._id,
+      remainingCredits: user.credits,
+    });
+  } catch (error) {
+    return res.status(500).json({message:`generate website error ${error}`})
+  }
 };
