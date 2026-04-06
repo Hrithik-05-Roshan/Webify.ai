@@ -4,8 +4,8 @@ import Home from './pages/Home';
 
 import useGetCurrentUser from './hooks/useGetCurrentUser';
 import { useSelector } from 'react-redux';
-import Dashboard from './pages/dashboard';
-import Generate from './pages/generate';
+import Dashboard from './pages/Dashboard';
+import Generate from './pages/Generate';
 export const serverUrl="http://localhost:8000"
 
 

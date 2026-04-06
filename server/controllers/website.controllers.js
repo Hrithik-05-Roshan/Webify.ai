@@ -150,13 +150,14 @@ ABSOLUTE RULES
 - IF FORMAT IS BROKEN → RESPONSE IS INVALID
 `;
 
-export const generateWebsite = async (res, req) => {
+export const generateWebsite = async (req, res) => {
   try {
     const { prompt } = req.body;
     if (!prompt) {
       return res.status(400).json({ message: "prompt is required" });
     }
     const user = await User.findById(req.user._id);
+    // console.log(user) //
     if (!user) {
       return res.status(400).json({ message: "user not found!" });
     }
@@ -177,6 +178,8 @@ export const generateWebsite = async (res, req) => {
         raw = await generateResponse(finalPrompt + "\n\nRETURN ONLY RAW JSON");
         parsed = await extractJson(raw);
       }
+      // console.log(raw ) //
+      // console.log(parsed ) //
     }
     if (!parsed.code) {
       console.log("AI returned invalid response");
@@ -186,7 +189,7 @@ export const generateWebsite = async (res, req) => {
     const website = await Website.create({
       user: user._id,
       title: prompt.slice(0, 60),
-      latestcode: parsed.code,
+      latestCode: parsed.code,
       conversation: [
         {
           role: "ai",

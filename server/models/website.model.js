@@ -19,6 +19,7 @@ const websiteSchema = new mongoose.Schema({
         required:true
     },
     title:{
+        type:String,
         default:"Untitled Website"
     },
     latestCode:{
