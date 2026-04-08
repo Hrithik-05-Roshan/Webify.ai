@@ -2,10 +2,12 @@ import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { serverUrl } from '../App'
-import { CodeXml, Monitor, Rocket, Send, SendHorizonal } from 'lucide-react'
+import { CodeXml, Monitor, Rocket, Send, SendHorizonal, X } from 'lucide-react'
 import { useRef } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
+import Editor from '@monaco-editor/react';
 
-function Editor() {
+function WebsiteEditor() {
     const { id } = useParams()
     const [website, setWebsite] = useState(null)
     const [error, setError] = useState("")
@@ -13,18 +15,43 @@ function Editor() {
     const [messages, setMessages] = useState([])
     const [prompt, setPrompt] = useState("")
     const iframeRef = useRef(null)
+    const [updateLoading, setUpdateLoading] = useState(false)
+    const [thinkingIndex, setThinkingIndex] = useState(0)
+    const [showCode, setShowCode] = useState(false)
+    const thinkingSteps = [
+        "Understanding the request ...",
+        "Planning layout changes...",
+        "Improving responsiveness...",
+        "Applying Animations...",
+        "Finalizing Update..."
+    ]
 
     const handleUpdate = async () => {
+        if (!prompt) return
+        setUpdateLoading(true)
+        const text = prompt
+        setPrompt("")
         setMessages((m) => [...m, { role: "user", content: prompt }])
         try {
-            const result = await axios.post(`${serverUrl}/api/website/update/${id}`, { prompt }, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/website/update/${id}`, { prompt: text }, { withCredentials: true })
             console.log(result)
+            setUpdateLoading(false)
             setMessages((m) => [...m, { role: "ai", content: result.data.message }])
             setCode(result.data.code)
         } catch (error) {
+            setUpdateLoading(false)
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        if (!updateLoading) return
+        const i = setInterval(() => {
+            setThinkingIndex((i) => (i + 1) % thinkingSteps.length)
+        }, 1200)
+
+        return () => clearInterval(i)
+    }, { updateLoading })
 
 
     useEffect(() => {
@@ -97,13 +124,20 @@ function Editor() {
                             </div>
                         ))}
 
+                        {updateLoading &&
+                            <div className='max-w-[85%] mr-auto'>
+                                <div className='px-4 py-2.5 rounded-2xl text-xs bg-white/5 border border-white/10 text-zinc-400 italic'>
+                                    {thinkingSteps[thinkingIndex]}
+                                </div>
+                            </div>}
+
                     </div>
                     <div className='p-3 border-t border-white/10'>
                         <div className='flex gap-2 items-center justify-between'>
                             <input placeholder='Describe changes ...'
                                 onChange={(e) => setPrompt(e.target.value)} value={prompt}
                                 className='flex-1 resize-none rounded-2xl px-3 py-2 bg-white/5 border border-white/10 text-sm outline-none overflow-hidden' />
-                            <button className='h-12 w-12 px-2 py-2 text-sm flex items-center justify-center font-semibold gap-2 rounded-full -rotate-30 bg-gradient-to-r from-indigo-500 to-purple-500 text-white/90 hover:scale-105 active:scale-95 transition-all cursor-pointer'
+                            <button className='h-12 w-12 px-2 py-2 text-sm flex items-center justify-center font-semibold gap-2 rounded-full -rotate-30 bg-gradient-to-r from-indigo-500 to-purple-500 text-white/90 hover:scale-105 active:scale-95 transition-all cursor-pointer' disabled={updateLoading}
                                 onClick={handleUpdate}
                             >
                                 <SendHorizonal size={20} strokeWidth={2.3} className='translate-x-[1px]' />
@@ -113,6 +147,7 @@ function Editor() {
 
                 </>
             </aside>
+
             <div className='flex-1 flex flex-col'>
                 <div className='h-14 px-4 flex justify-between items-center border-b border-white/10 bg-black/80'>
                     <span className='text-xs text-zinc-400'>
@@ -122,7 +157,7 @@ function Editor() {
                         <button className='flex items-center gap-2 px-4 py-1.5 rounded-lg bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'>
                             <Rocket size={16} /> Deploy
                         </button>
-                        <button className='p-2 cursor-pointer hover:border hover:border-white/10 hover:bg-white/10 hover:rounded-full '>
+                        <button className='p-2 cursor-pointer hover:border hover:border-white/10 hover:bg-white/10 hover:rounded-full ' onClick={() => setShowCode(true)}>
                             <CodeXml size={18} />
                         </button>
                         <button className='p-2 cursor-pointer hover:border hover:border-white/10 hover:bg-white/10 hover:rounded-full '>
@@ -132,6 +167,31 @@ function Editor() {
                 </div>
                 <iframe ref={iframeRef} className='flex-1 w-full bg-white' />
             </div>
+
+            <AnimatePresence>
+                {showCode && (
+                    <motion.div
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "100%" }}
+                        className='fixed inset-y-0 right-0 w-full lg:w-[45%] z-[9999] bg-[#1e1e1e] flex flex-col'
+                    >
+                        <div className='h-12 px-4 flex justify-between items-center border-b border-white/10 bg-[#1e1e1e]'>
+                            <span className='text-sm font-medium'>index.html</span>
+                            <button className='cursor-pointer' onClick={()=>setShowCode(false)}>
+                                <X size={18}/>
+                            </button>
+                        </div>
+                        <Editor 
+                        theme='vs-dark'
+                        value={code}
+                        language='html'
+                        onChange={(c)=>setCode(c)}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
         </div>
     )
 
@@ -145,4 +205,4 @@ function Editor() {
 
 }
 
-export default Editor
+export default WebsiteEditor

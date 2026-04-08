@@ -192,12 +192,12 @@ export const generateWebsite = async (req, res) => {
       latestCode: parsed.code,
       conversation: [
         {
-          role: "user",
-          content: prompt,
-        },
-        {
           role: "ai",
           content: parsed.message,
+        },
+        {
+          role: "user",
+          content: prompt,
         },
       ],
     });

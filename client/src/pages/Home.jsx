@@ -63,7 +63,7 @@ const Home = () => {
                         </button> :
                             <div className='relative'>
                                 <button className='flex items-center cursor-pointer' onClick={() => setOpenProfile(!openProfile)}>
-                                    <img src={userData.avatar || `https://ui-avatars.com/api/?name=${userData.name}`} alt="/profileimage" className='w-10 h-10 rounded-full border border-white/20 object-cover' />
+                                    <img src={userData.avatar || `https://ui-avatars.com/api/?name=${userData.name}`} alt="/profileimage" referrerPolicy='no-referrer' className='w-10 h-10 rounded-full border border-white/20 object-cover' />
                                 </button>
                                 <AnimatePresence>
                                     {openProfile && (
