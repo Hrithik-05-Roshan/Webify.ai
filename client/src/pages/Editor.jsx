@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { serverUrl } from '../App'
-import { CodeXml, Monitor, Rocket } from 'lucide-react'
+import { CodeXml, Monitor, Rocket, Send, SendHorizonal } from 'lucide-react'
 import { useRef } from 'react'
 
 function Editor() {
@@ -26,13 +26,13 @@ function Editor() {
         handleGetWebsite()
     }, [id])
 
-    useEffect(()=>{
-        if(!iframeRef.current || !website.latestCode) return ;
-        const blob = new Blob([website.latestCode],{type:"text/html"})
+    useEffect(() => {
+        if (!iframeRef.current || !website?.latestCode) return;
+        const blob = new Blob([website?.latestCode], { type: "text/html" })
         const url = URL.createObjectURL(blob)
         iframeRef.current.src = url
-        return ()=>URL.revokeObjectURL(url)
-    },[website])
+        return () => URL.revokeObjectURL(url)
+    }, [website?.latestCode])
 
     if (error) {
         return (
@@ -55,7 +55,7 @@ function Editor() {
 
     return (
         <div className='h-screen w-screen flex bg-black text-white overflow-hidden'>
-            <aside>
+            <aside className='hidden lg:flex w-[380px] flex-col border-r-4 border-white/10 bg-black/80'>
                 <Header />
                 <Chat />
             </aside>
@@ -91,29 +91,41 @@ function Editor() {
 
     function Chat() {
         return (
-            <div className='flex-1 overflow-y-auto px-4 space-y-4'>
-                {website.conversation.map((m, i) => (
-                    <div
-                        key={i}
-                        className={`max-w-[85%] ${m.role === "user"
-                            ? "ml-auto"
-                            : "mr-auto"
-                            }`}
-                    >
-
+            <>
+                <div className='flex-1 overflow-y-auto px-4 space-y-4'>
+                    {website.conversation.map((m, i) => (
                         <div
-                            className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${m.role === "user"
-                                ? "bg-white text-black"
-                                : "bg-white/5 border border-white/10 text-zinc-200"
+                            key={i}
+                            className={`max-w-[85%] ${m.role === "user"
+                                ? "ml-auto"
+                                : "mr-auto"
                                 }`}
                         >
-                            {m.content}
+
+                            <div
+                                className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${m.role === "user"
+                                    ? "bg-white text-black"
+                                    : "bg-white/5 border border-white/10 text-zinc-200"
+                                    }`}
+                            >
+                                {m.content}
+
+                            </div>
 
                         </div>
+                    ))}
 
+                </div>
+                <div className='p-3 border-t border-white/10'>
+                    <div className='flex gap-2 items-center justify-between'>
+                        <textarea row="1" placeholder='Describe changes ...' className='flex-1 resize-none rounded-2xl px-3 py-2 bg-white/5 border border-white/10 text-sm outline-none overflow-hidden'></textarea>
+                        <button className='h-12 w-12 px-2 py-2 text-sm flex items-center justify-center font-semibold gap-2 rounded-full -rotate-30 bg-gradient-to-r from-indigo-500 to-purple-500 text-white/90 hover:scale-105 active:scale-95 transition-all cursor-pointer'>
+                            <SendHorizonal size={20} strokeWidth={2.3} className='translate-x-[1px]'/>
+                        </button>
                     </div>
-                ))}
-            </div>
+                </div>
+
+            </>
         )
     }
 }
