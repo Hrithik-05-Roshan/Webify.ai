@@ -2,13 +2,15 @@ import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { serverUrl } from '../App'
+import { CodeXml, Monitor, Rocket } from 'lucide-react'
+import { useRef } from 'react'
 
 function Editor() {
     const { id } = useParams()
 
     const [website, setWebsite] = useState(null)
     const [error, setError] = useState("")
-
+    const iframeRef = useRef(null)
 
 
     useEffect(() => {
@@ -23,6 +25,14 @@ function Editor() {
         }
         handleGetWebsite()
     }, [id])
+
+    useEffect(()=>{
+        if(!iframeRef.current || !website.latestCode) return ;
+        const blob = new Blob([website.latestCode],{type:"text/html"})
+        const url = URL.createObjectURL(blob)
+        iframeRef.current.src = url
+        return ()=>URL.revokeObjectURL(url)
+    },[website])
 
     if (error) {
         return (
@@ -49,6 +59,25 @@ function Editor() {
                 <Header />
                 <Chat />
             </aside>
+            <div className='flex-1 flex flex-col'>
+                <div className='h-14 px-4 flex justify-between items-center border-b border-white/10 bg-black/80'>
+                    <span className='text-xs text-zinc-400'>
+                        Live Preview
+                    </span>
+                    <div className='flex gap-2'>
+                        <button className='flex items-center gap-2 px-4 py-1.5 rounded-lg bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'>
+                            <Rocket size={16} /> Deploy
+                        </button>
+                        <button className='p-2 cursor-pointer hover:scale-108 '>
+                            <CodeXml size={18} />
+                        </button>
+                        <button className='p-2 cursor-pointer hover:scale-105 '>
+                            <Monitor size={18} />
+                        </button>
+                    </div>
+                </div>
+                <iframe ref={iframeRef} className='flex-1 w-full bg-white' />
+            </div>
         </div>
     )
 
@@ -67,8 +96,8 @@ function Editor() {
                     <div
                         key={i}
                         className={`max-w-[85%] ${m.role === "user"
-                                ? "ml-auto"
-                                : "mr-auto"
+                            ? "ml-auto"
+                            : "mr-auto"
                             }`}
                     >
 
