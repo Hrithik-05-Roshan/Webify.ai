@@ -192,12 +192,12 @@ export const generateWebsite = async (req, res) => {
       latestCode: parsed.code,
       conversation: [
         {
-          role: "ai",
-          content: parsed.message,
-        },
-        {
           role: "user",
           content: prompt,
+        },
+        {
+          role: "ai",
+          content: parsed.message,
         },
       ],
     });
@@ -287,8 +287,8 @@ export const changes = async (req, res) => {
     }
 
     website.conversation.push(
-      { role: "ai", content: parsed.message },
       { role: "user", content: prompt },
+      { role: "ai", content: parsed.message },
     );
 
     website.latestCode = parsed.code;

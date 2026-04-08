@@ -7,10 +7,24 @@ import { useRef } from 'react'
 
 function Editor() {
     const { id } = useParams()
-
     const [website, setWebsite] = useState(null)
     const [error, setError] = useState("")
+    const [code, setCode] = useState("")
+    const [messages, setMessages] = useState([])
+    const [prompt, setPrompt] = useState("")
     const iframeRef = useRef(null)
+
+    const handleUpdate = async () => {
+        setMessages((m) => [...m, { role: "user", content: prompt }])
+        try {
+            const result = await axios.post(`${serverUrl}/api/website/update/${id}`, { prompt }, { withCredentials: true })
+            console.log(result)
+            setMessages((m) => [...m, { role: "ai", content: result.data.message }])
+            setCode(result.data.code)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     useEffect(() => {
@@ -18,6 +32,8 @@ function Editor() {
             try {
                 const result = await axios.get(`${serverUrl}/api/website/get-by-id/${id}`, { withCredentials: true })
                 setWebsite(result.data)
+                setCode(result.data.latestCode)
+                setMessages(result.data.conversation)
             } catch (error) {
                 console.log(error.response.data.message)
                 setError()
@@ -27,12 +43,12 @@ function Editor() {
     }, [id])
 
     useEffect(() => {
-        if (!iframeRef.current || !website?.latestCode) return;
-        const blob = new Blob([website?.latestCode], { type: "text/html" })
+        if (!iframeRef.current || !code) return;
+        const blob = new Blob([code], { type: "text/html" })
         const url = URL.createObjectURL(blob)
         iframeRef.current.src = url
         return () => URL.revokeObjectURL(url)
-    }, [website?.latestCode])
+    }, [code])
 
     if (error) {
         return (
@@ -57,7 +73,45 @@ function Editor() {
         <div className='h-screen w-screen flex bg-black text-white overflow-hidden'>
             <aside className='hidden lg:flex w-[380px] flex-col border-r-4 border-white/10 bg-black/80'>
                 <Header />
-                <Chat />
+                <>
+                    <div className='flex-1 overflow-y-auto px-4 space-y-4'>
+                        {messages.map((m, i) => (
+                            <div
+                                key={i}
+                                className={`max-w-[85%] ${m.role === "user"
+                                    ? "ml-auto"
+                                    : "mr-auto"
+                                    }`}
+                            >
+
+                                <div
+                                    className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${m.role === "user"
+                                        ? "bg-white text-black"
+                                        : "bg-white/5 border border-white/10 text-zinc-200"
+                                        }`}
+                                >
+                                    {m.content}
+
+                                </div>
+
+                            </div>
+                        ))}
+
+                    </div>
+                    <div className='p-3 border-t border-white/10'>
+                        <div className='flex gap-2 items-center justify-between'>
+                            <input placeholder='Describe changes ...'
+                                onChange={(e) => setPrompt(e.target.value)} value={prompt}
+                                className='flex-1 resize-none rounded-2xl px-3 py-2 bg-white/5 border border-white/10 text-sm outline-none overflow-hidden' />
+                            <button className='h-12 w-12 px-2 py-2 text-sm flex items-center justify-center font-semibold gap-2 rounded-full -rotate-30 bg-gradient-to-r from-indigo-500 to-purple-500 text-white/90 hover:scale-105 active:scale-95 transition-all cursor-pointer'
+                                onClick={handleUpdate}
+                            >
+                                <SendHorizonal size={20} strokeWidth={2.3} className='translate-x-[1px]' />
+                            </button>
+                        </div>
+                    </div>
+
+                </>
             </aside>
             <div className='flex-1 flex flex-col'>
                 <div className='h-14 px-4 flex justify-between items-center border-b border-white/10 bg-black/80'>
@@ -68,10 +122,10 @@ function Editor() {
                         <button className='flex items-center gap-2 px-4 py-1.5 rounded-lg bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'>
                             <Rocket size={16} /> Deploy
                         </button>
-                        <button className='p-2 cursor-pointer hover:scale-108 '>
+                        <button className='p-2 cursor-pointer hover:border hover:border-white/10 hover:bg-white/10 hover:rounded-full '>
                             <CodeXml size={18} />
                         </button>
-                        <button className='p-2 cursor-pointer hover:scale-105 '>
+                        <button className='p-2 cursor-pointer hover:border hover:border-white/10 hover:bg-white/10 hover:rounded-full '>
                             <Monitor size={18} />
                         </button>
                     </div>
@@ -89,45 +143,6 @@ function Editor() {
         )
     }
 
-    function Chat() {
-        return (
-            <>
-                <div className='flex-1 overflow-y-auto px-4 space-y-4'>
-                    {website.conversation.map((m, i) => (
-                        <div
-                            key={i}
-                            className={`max-w-[85%] ${m.role === "user"
-                                ? "ml-auto"
-                                : "mr-auto"
-                                }`}
-                        >
-
-                            <div
-                                className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${m.role === "user"
-                                    ? "bg-white text-black"
-                                    : "bg-white/5 border border-white/10 text-zinc-200"
-                                    }`}
-                            >
-                                {m.content}
-
-                            </div>
-
-                        </div>
-                    ))}
-
-                </div>
-                <div className='p-3 border-t border-white/10'>
-                    <div className='flex gap-2 items-center justify-between'>
-                        <textarea row="1" placeholder='Describe changes ...' className='flex-1 resize-none rounded-2xl px-3 py-2 bg-white/5 border border-white/10 text-sm outline-none overflow-hidden'></textarea>
-                        <button className='h-12 w-12 px-2 py-2 text-sm flex items-center justify-center font-semibold gap-2 rounded-full -rotate-30 bg-gradient-to-r from-indigo-500 to-purple-500 text-white/90 hover:scale-105 active:scale-95 transition-all cursor-pointer'>
-                            <SendHorizonal size={20} strokeWidth={2.3} className='translate-x-[1px]'/>
-                        </button>
-                    </div>
-                </div>
-
-            </>
-        )
-    }
 }
 
 export default Editor
