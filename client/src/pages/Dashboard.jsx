@@ -1,4 +1,4 @@
-import { ArrowLeft, Rocket, Share2 } from 'lucide-react'
+import { ArrowLeft, Check, Rocket, Share2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { motion } from "motion/react";
 import { useSelector } from "react-redux";
@@ -6,21 +6,25 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { serverUrl } from '../App';
 
-
-
-
 const Dashboard = () => {
     const { userData } = useSelector(state => state.user)
     const navigate = useNavigate()
     const [websites, setWebsites] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
+    const [copiedId, setCopiedId] = useState(null)
 
     const handleDeploy = async (id) => {
         try {
             const result = await axios.get(`${serverUrl}/api/website/deploy/${id}`,
                 { withCredentials: true })
-                window.open(`${result.data.url}`,"_blank")
+            window.open(`${result.data.url}`, "_blank")
+            setWebsites((prev) =>
+                prev.map((w) => w._id === id
+                    ? { ...w, deployed: true, deployUrl: result.data.url }
+                    : w
+                )
+            )
         } catch (error) {
             console.log(error)
         }
@@ -41,6 +45,12 @@ const Dashboard = () => {
         }
         handleGetAllWebsites()
     }, [])
+
+    const handleCopy = async (site) => {
+        await navigator.clipboard.writeText(site.deployUrl)
+        setCopiedId(site._id)
+        setTimeout(() => setCopiedId(null), 2000)
+    }
 
 
     return (
@@ -82,33 +92,57 @@ const Dashboard = () => {
 
                 {!loading && !error && websites?.length > 0 && (
                     <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8'>
-                        {websites.map((w, i) => (
-                            <motion.div
+                        {websites.map((w, i) => {
+
+                            const copied = copiedId === w._id
+
+                            return <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.05 }}
                                 whileHover={{ y: -6 }}
-                                className='rounded-2xl bg-white/5 border border-white/10 overflow-hidden flex flex-col transition hover:bg-white/10'>
-                                <div className='relative h-40 bg-black cursor-pointer'>
+                                
+                                className='rounded-2xl bg-white/5 border border-white/10 overflow-hidden flex flex-col transition hover:bg-white/10 cursor-pointer'>
+                                <div className='relative h-40 bg-black cursor-pointer' onClick={()=>navigate(`/editor/${w._id}`)}>
                                     <iframe srcDoc={w.latestCode} className='absolute inset-0 w-[140%] h-[140%] scale-[0.72] origin-top-left pointer-events-none bg-white ' />
                                     <div className='absolute inset-0 bg-black/30' />
                                 </div>
-                                <div className='p-5 flex flex-col gap-4 flex-1'>
+                                <div className='p-5 flex flex-col gap-4 flex-1' >
                                     <h3 className='text-base font-semibold line-clamp-2'>{w.title}</h3>
                                     <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updateAt).toLocaleDateString()} </p>
                                     {!w.deployed ? (
                                         <button className='mt-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-semibold bg-linear-to-r from-indigo-500 to-purple-500 text-sm hover:scale-105 transition cursor-pointer'
-                                        onClick={()=>handleDeploy(w._id)}
+                                            onClick={() => handleDeploy(w._id)}
                                         >
                                             <Rocket size={16} /> Deploy
                                         </button>
                                     ) : (
-                                        <button className='flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'><Share2 /> Share Link</button>
+                                        <motion.button
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => handleCopy(w)}
+                                            className={` mt-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium hover:scale-105 transition-all cursor-pointer
+                                            ${copied ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                                    : "bg-white/10 hover:bg-white/20 border border-white/10"
+                                                }
+                                            `}>
+
+                                            {copied ? (
+                                                <>
+                                                    <Check size={14} />
+                                                    Link Copied
+                                                </>
+                                            ) :
+                                                <>
+                                                    <Share2 size={14} />
+                                                    Share Link
+                                                </>
+                                            }
+                                        </motion.button>
                                     )}
                                 </div>
                             </motion.div>
-                        ))}
+                        })}
                     </div>
                 )}
             </div>

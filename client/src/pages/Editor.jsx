@@ -28,6 +28,16 @@ function WebsiteEditor() {
         "Finalizing Update..."
     ]
 
+    const handleDeploy = async () => {
+        try {
+            const result = await axios.get(`${serverUrl}/api/website/deploy/${website._id}`,
+                { withCredentials: true })
+            window.open(`${result.data.url}`, "_blank")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleUpdate = async () => {
         if (!prompt) return
         setUpdateLoading(true)
@@ -156,9 +166,13 @@ function WebsiteEditor() {
                         Live Preview
                     </span>
                     <div className='flex gap-2'>
-                        <button className='flex items-center gap-2 px-4 py-1.5 rounded-lg bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'>
-                            <Rocket size={16} /> Deploy
-                        </button>
+                        {website.deployed ? "" :
+                            <button className='flex items-center gap-2 px-4 py-1.5 rounded-lg bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'
+                                onClick={() => handleDeploy(website._id)}
+                            >
+                                <Rocket size={16} /> Deploy
+                            </button>
+                        }
                         <button className='p-2 cursor-pointer lg:hidden' onClick={() => setShowChat(true)}>
                             <MessageCircleMore size={18} />
                         </button>
@@ -170,7 +184,7 @@ function WebsiteEditor() {
                         </button>
                     </div>
                 </div>
-                <iframe ref={iframeRef} className='flex-1 w-full bg-white' sandbox='allow-same-origin allow-scripts allow-forms'/>
+                <iframe ref={iframeRef} className='flex-1 w-full bg-white' sandbox='allow-same-origin allow-scripts allow-forms' />
             </div>
 
 
@@ -262,7 +276,7 @@ function WebsiteEditor() {
                     <motion.div
                         className='fixed inset-0 z-[9999] bg-black'
                     >
-                        <iframe className='w-full h-full bg-white' srcDoc={code} sandbox='allow-same-origin allow-scripts allow-forms'/>
+                        <iframe className='w-full h-full bg-white' srcDoc={code} sandbox='allow-same-origin allow-scripts allow-forms' />
                         <button className='absolute top-3.5 right-3.5 p-1.5 cursor-pointer hover:border border-white/10 hover:bg-white/10 rounded-lg ' onClick={() => setShowPreview(false)}><Shrink size={26} strokeWidth={1.3} /></button>
                     </motion.div>
                 )}
@@ -270,12 +284,12 @@ function WebsiteEditor() {
         </div>
     )
 
-    function Header({onClose}) {
+    function Header({ onClose }) {
         return (
             <div className='h-14 px-4 flex items-center justify-between border-b border-white/10 mb-5'>
                 <span className='font-semibold truncate'>{website.title}</span>
                 {onClose && (
-                <button className='cursor-pointer' onClick={onClose}> <X size={18} color='white'/> </button>
+                    <button className='cursor-pointer' onClick={onClose}> <X size={18} color='white' /> </button>
                 )}
             </div>
         )
