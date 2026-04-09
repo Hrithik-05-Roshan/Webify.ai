@@ -19,7 +19,7 @@ function Generate() {
   const [progress, setProgress] = useState(0)
   const [phaseIndex, setPhaseIndex] = useState(0)
   const [error, setError] = useState("")
-  
+
   const handleGenerateWebsite = async () => {
     setLoading(true)
     try {
@@ -45,10 +45,10 @@ function Generate() {
     let value = 0
     let phase = 0
     const interval = setInterval(() => {
-      const increment = value < 20 ? Math.random() * 1.5
-        : value < 60
-          ? Math.random() * 1.2
-          : Math.random() * 0.6;
+      const increment =
+        value < 20 ? Math.random() * 1.5 :
+        value < 60 ? Math.random() * 1.2 :
+        Math.random() * 0.6;
 
       value += increment
 
@@ -65,7 +65,7 @@ function Generate() {
 
 
     return () => clearInterval(interval)
-  }, []);
+  }, [loading]);
 
   return (
     <div className='min-h-screen bg-linear-to-br from-[#050505] via-[#0b0b0b] to-[#050505] text-white '>
