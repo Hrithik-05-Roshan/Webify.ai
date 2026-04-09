@@ -64,8 +64,8 @@ function WebsiteEditor() {
                 setCode(result.data.latestCode)
                 setMessages(result.data.conversation)
             } catch (error) {
-                console.log(error.response.data.message)
-                setError()
+                console.log(error)
+                setError(error.response.data.message)
             }
         }
         handleGetWebsite()
@@ -170,7 +170,7 @@ function WebsiteEditor() {
                         </button>
                     </div>
                 </div>
-                <iframe ref={iframeRef} className='flex-1 w-full bg-white' />
+                <iframe ref={iframeRef} className='flex-1 w-full bg-white' sandbox='allow-same-origin allow-scripts allow-forms'/>
             </div>
 
 
@@ -262,7 +262,7 @@ function WebsiteEditor() {
                     <motion.div
                         className='fixed inset-0 z-[9999] bg-black'
                     >
-                        <iframe className='w-full h-full bg-white' srcDoc={code} />
+                        <iframe className='w-full h-full bg-white' srcDoc={code} sandbox='allow-same-origin allow-scripts allow-forms'/>
                         <button className='absolute top-3.5 right-3.5 p-1.5 cursor-pointer hover:border border-white/10 hover:bg-white/10 rounded-lg ' onClick={() => setShowPreview(false)}><Shrink size={26} strokeWidth={1.3} /></button>
                     </motion.div>
                 )}

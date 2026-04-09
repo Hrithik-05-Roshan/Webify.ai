@@ -16,6 +16,16 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
+    const handleDeploy = async (id) => {
+        try {
+            const result = await axios.get(`${serverUrl}/api/website/deploy/${id}`,
+                { withCredentials: true })
+                window.open(`${result.data.url}`,"_blank")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         const handleGetAllWebsites = async () => {
             setLoading(true)
@@ -82,13 +92,15 @@ const Dashboard = () => {
                                 className='rounded-2xl bg-white/5 border border-white/10 overflow-hidden flex flex-col transition hover:bg-white/10'>
                                 <div className='relative h-40 bg-black cursor-pointer'>
                                     <iframe srcDoc={w.latestCode} className='absolute inset-0 w-[140%] h-[140%] scale-[0.72] origin-top-left pointer-events-none bg-white ' />
-                                <div className='absolute inset-0 bg-black/30' />
+                                    <div className='absolute inset-0 bg-black/30' />
                                 </div>
                                 <div className='p-5 flex flex-col gap-4 flex-1'>
                                     <h3 className='text-base font-semibold line-clamp-2'>{w.title}</h3>
                                     <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updateAt).toLocaleDateString()} </p>
                                     {!w.deployed ? (
-                                        <button className='mt-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-semibold bg-linear-to-r from-indigo-500 to-purple-500 text-sm hover:scale-105 transition cursor-pointer'>
+                                        <button className='mt-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-semibold bg-linear-to-r from-indigo-500 to-purple-500 text-sm hover:scale-105 transition cursor-pointer'
+                                        onClick={()=>handleDeploy(w._id)}
+                                        >
                                             <Rocket size={16} /> Deploy
                                         </button>
                                     ) : (
