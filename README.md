@@ -27,7 +27,7 @@ Users simply describe their idea, and the platform generates a complete website 
   Users spend credits for each generation  
 
 - 💳 **Secure Payments**  
-  Stripe Checkout + Webhooks integration  
+  Razorpay Checkout + Webhooks integration  
 
 - 🎞 **Premium UI/UX**  
   Smooth animations using Framer Motion  
@@ -45,7 +45,8 @@ Users simply describe their idea, and the platform generates a complete website 
 ### Frontend
 - React.js  
 - Tailwind CSS  
-- Framer Motion  
+- Framer Motion 
+- Lucid-React icons 
 
 ### Backend
 - Node.js  
@@ -53,7 +54,7 @@ Users simply describe their idea, and the platform generates a complete website 
 - MongoDB  
 
 ### Payments
-- Stripe (Checkout + Webhooks)  
+- Razorpay (Checkout + Webhooks)  
 
 ### Deployment
 - Render  
