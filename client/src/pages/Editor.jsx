@@ -30,7 +30,7 @@ function WebsiteEditor() {
 
     const handleDeploy = async () => {
         try {
-            const result = await axios.get(`${serverUrl}/api/website/deploy/${website._id}`,
+            const result = await axios.post(`${serverUrl}/api/website/deploy/${website._id}`,
                 { withCredentials: true })
             window.open(`${result.data.url}`, "_blank")
         } catch (error) {
