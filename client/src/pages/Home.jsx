@@ -20,6 +20,7 @@ const Home = () => {
     const { userData } = useSelector(state => state.user)
     const [openProfile, setOpenProfile] = useState(false)
     const [websites, setWebsites] = useState(null)
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleLogout = async () => {
@@ -28,7 +29,8 @@ const Home = () => {
                 withCredentials: true
             })
                 dispatch(setUserData(null))
-            setOpenProfile(false)
+                setWebsites(null)
+                navigate("/")
         } catch (error) {
             console.log(error)
         }
@@ -143,8 +145,10 @@ const Home = () => {
                     animate={{ opacity: 1, }}
                     transition={{ duration: 2 }}
                     className='px-10 py-4 rounded-xl bg-white text-black text-lg font-semibold hover:scale-105 transition mt-12 hover:cursor-pointer'
-                    // onClick={() => navigate("/dashboard")}
-                    onClick={() => setOpenLogin(true)}
+                    onClick={() => {
+                    if (userData) navigate("/dashboard")
+                    else setOpenLogin(true)
+}}
                 >
                     {userData ? "Go to Dashboard" : "Get Started"}
                 </motion.button>
@@ -192,7 +196,7 @@ const Home = () => {
                                 </div>
                                 <div className='p-4 gap-4 flex-col flex'>
                                     <h3 className='text-base font-semibold line-clamp-2'>{w.title}</h3>
-                                    <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updateAt).toLocaleDateString()} </p>
+                                    <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updatedAt).toLocaleDateString()} </p>
                                 </div>
                             </motion.div>
                         ))}
