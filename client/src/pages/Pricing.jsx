@@ -88,7 +88,23 @@ function Pricing() {
                 currency: "INR",
                 order_id: result.data.id,
 
-                
+                handler: async function (response) {
+                    try {
+                        await axios.post(
+                            `${serverUrl}/api/payment/verify`,
+                            response,
+                            { withCredentials: true }
+                        )
+
+                        alert("Payment Successful 🎉")
+
+                        window.location.href = "/dashboard"   
+
+                    } catch (err) {
+                        console.log(err)
+                        alert("Verification failed ❌")
+                    }
+                }
             }
 
             const rzp = new window.Razorpay(options)
@@ -99,13 +115,6 @@ function Pricing() {
             setLoadingPlan(false)
         }
     }
-
-
-
-
-
-
-
     return (
         <div className='relative min-h-screen overflow-hidden bg-[#050505] text-white px-6 pt-6 pb-24'>
             <div className='absolute inset-0 pointer-events-none'>
@@ -169,13 +178,14 @@ function Pricing() {
                         </ul>
                         <motion.button
                             whileTap={{ scale: 0.96 }}
-                            //onClick-disables
+                            disabled={loadingPlan}
+                            onClick={() => handlePayment(p.key)}
                             className={`w-full py-3 rounded-xl font-semibold cursor-pointer transition ${p.popular
                                 ? "bg-indigo-500 hover:bg-indigo-600"
                                 : "bg-white/10 hover:bg-white/20"
                                 } disabled:opacity-60`}
                         >
-                            //Loadingplan
+                            {loadingPlan === p.key ? "Redirecting..." : p.button}
                         </motion.button>
 
                     </motion.div>
