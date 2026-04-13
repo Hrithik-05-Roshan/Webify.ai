@@ -11,7 +11,7 @@ import paymentRouter from "./routes/payment.route.js";
 
 
 const app = express();
-const port=process.env.PORT || 5000
+const PORT=process.env.PORT || 5000
 
 app.use(express.json())
 app.use(cookieParser())
@@ -24,7 +24,7 @@ app.use("/api/user", userRouter)
 app.use("/api/website", websiteRouter)
 app.use("/api/payment", paymentRouter)
 
-app.listen(port,()=>{
-    console.log("server started");
+app.listen(PORT,()=>{
+    console.log(`server started on port ${PORT}`)
     connectDb()
 })

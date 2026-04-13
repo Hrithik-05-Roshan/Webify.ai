@@ -1,6 +1,7 @@
 import razorpay from "../config/razorpay.services.js";
 import Payment from "../models/payment.model.js";
 import crypto from "crypto";
+import User from "../models/user.model.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -75,10 +76,10 @@ export const verifyPayment = async (req, res) => {
     res.json({
       success: true,
       message: "Payment verified & credits added successfully",
-      credits: updateUser.credits,
+      credits: updateUser,
     });
   } catch (error) {
     console.error("Error verifying payment:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Failed to verify payment" });
   }
 };

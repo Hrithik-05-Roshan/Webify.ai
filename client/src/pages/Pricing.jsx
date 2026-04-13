@@ -1,7 +1,11 @@
 import { ArrowLeft, Check, Coins } from 'lucide-react';
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from "motion/react";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { serverUrl } from '../App'
+
 
 const plans = [
     {
@@ -51,6 +55,10 @@ const plans = [
 ];
 function Pricing() {
     const navigate = useNavigate()
+
+
+    // handlePayment
+
     return (
         <div className='relative min-h-screen overflow-hidden bg-[#050505] text-white px-6 pt-6 pb-24'>
             <div className='absolute inset-0 pointer-events-none'>
@@ -108,18 +116,19 @@ function Pricing() {
                             {p.features.map((f) => (
                                 <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">
                                     <Check className="w-4 h-4 text-indigo-400" />
-                                    {f}
+                                    {f} 
                                 </li>
                             ))}
                         </ul>
                         <motion.button
                             whileTap={{ scale: 0.96 }}
+                            //onClick-disables
                             className={`w-full py-3 rounded-xl font-semibold cursor-pointer transition ${p.popular
-                                    ? "bg-indigo-500 hover:bg-indigo-600"
-                                    : "bg-white/10 hover:bg-white/20"
+                                ? "bg-indigo-500 hover:bg-indigo-600"
+                                : "bg-white/10 hover:bg-white/20"
                                 } disabled:opacity-60`}
                         >
-                            {p.button}
+                            //Loadingplan
                         </motion.button>
 
                     </motion.div>
@@ -129,6 +138,8 @@ function Pricing() {
 
         </div>
     )
+
+
 }
 
 export default Pricing
