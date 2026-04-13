@@ -56,8 +56,55 @@ const plans = [
 function Pricing() {
     const navigate = useNavigate()
 
+    const { userData } = useSelector(state => state.user)
+    const [loadingPlan, setLoadingPlan] = useState(null)
 
-    // handlePayment
+    const handlePayment = async (planKey) => {
+        if (!userData) {
+            navigate("/")
+            return
+        }
+        if (planKey === "free") {
+            alert("You are already on the free plan!")
+            navigate("/dashboard")
+            return
+        }
+        const selectedPlan = plans.find(p => p.key === planKey)
+        setLoadingPlan(planKey)
+        try {
+            const result = await axios.post
+                (`${serverUrl}/api/payment/order`,
+                    {
+                        planId: planKey,
+                        amount: parseInt(selectedPlan.price.replace("₹", "")), // or hardcode
+                        credits: selectedPlan.credits
+                    },
+                    { withCredentials: true }
+                )
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                amount: result.data.amount,
+                currency: "INR",
+                order_id: result.data.id,
+
+                
+            }
+
+            const rzp = new window.Razorpay(options)
+            rzp.open()
+
+        } catch (error) {
+            console.log(error)
+            setLoadingPlan(false)
+        }
+    }
+
+
+
+
+
+
 
     return (
         <div className='relative min-h-screen overflow-hidden bg-[#050505] text-white px-6 pt-6 pb-24'>
@@ -116,7 +163,7 @@ function Pricing() {
                             {p.features.map((f) => (
                                 <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">
                                     <Check className="w-4 h-4 text-indigo-400" />
-                                    {f} 
+                                    {f}
                                 </li>
                             ))}
                         </ul>
