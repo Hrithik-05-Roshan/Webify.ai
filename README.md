@@ -27,7 +27,7 @@ Users simply describe their idea, and the platform generates a complete website 
   Users spend credits for each generation  
 
 - 💳 **Secure Payments**  
-  Razorpay Checkout + Webhooks integration  
+  Razorpay Checkout + verification integration  
 
 - 🎞 **Premium UI/UX**  
   Smooth animations using Framer Motion  
@@ -54,7 +54,7 @@ Users simply describe their idea, and the platform generates a complete website 
 - MongoDB  
 
 ### Payments
-- Razorpay (Checkout + Webhooks)  
+- Razorpay (Checkout + verify)  
 
 ### Deployment
 - Render  
@@ -120,10 +120,10 @@ MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secret
 
 VITE_FIREBASE_API_KEY=your_firebase_api_key
-STRIPE_SECRET_KEY=your_stripe_secret
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
+RAZORPAY_SECTER_KEY=your_stripe_secret
+RAZORPAY_TEST_KEY=your_webhook_secret
 
-CLIENT_URL=http://localhost:3000
+CLIENT_URL=your_deployed_url
 ```
 
 ---
