@@ -143,7 +143,8 @@ const Home = () => {
                     animate={{ opacity: 1, }}
                     transition={{ duration: 2 }}
                     className='px-10 py-4 rounded-xl bg-white text-black text-lg font-semibold hover:scale-105 transition mt-12 hover:cursor-pointer'
-                    onClick={() => navigate("/dashboard")}
+                    // onClick={() => navigate("/dashboard")}
+                    onClick={() => setOpenLogin(true)}
                 >
                     {userData ? "Go to Dashboard" : "Get Started"}
                 </motion.button>
