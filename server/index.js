@@ -16,7 +16,7 @@ const PORT=process.env.PORT || 5000
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin:"https://webify-ai-flame.vercel.app/",
+    origin:"https://webify-ai-1.onrender.com",
     credentials:true
 }))
 app.use("/api/auth", authRouter)
