@@ -1,16 +1,21 @@
 const extractJson = async (text) => {
   if (!text) {
-    return;
+    return null;
   }
-  const cleaned = text
-    .replace(/```json/gi, "")
-    .replace(/```/g, "")
-    .trim();
+  try {
+    const cleaned = text
+      .replace(/```json/gi, "")
+      .replace(/```/g, "")
+      .trim();
 
-  const firstBrace = cleaned.indexOf("{");
-  const closeBrace = cleaned.lastIndexOf("}");
-  if (firstBrace == -1 || closeBrace == -1) return null;
-  const jsonString = cleaned.slice(firstBrace, closeBrace + 1);
-  return JSON.parse(jsonString);
+    const firstBrace = cleaned.indexOf("{");
+    const closeBrace = cleaned.lastIndexOf("}");
+    if (firstBrace == -1 || closeBrace == -1) return null;
+    const jsonString = cleaned.slice(firstBrace, closeBrace + 1);
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.log("JSON parse error:", error.message);
+    return null;
+  }
 };
 export default extractJson;

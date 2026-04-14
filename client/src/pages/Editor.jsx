@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { serverUrl } from '../App'
@@ -31,7 +31,7 @@ function WebsiteEditor() {
     const handleDeploy = async () => {
         try {
             const result = await axios.post(`${serverUrl}/api/website/deploy/${website._id}`,
-                { withCredentials: true })
+                {}, { withCredentials: true })
             window.open(`${result.data.url}`, "_blank")
         } catch (error) {
             console.log(error)
@@ -63,7 +63,7 @@ function WebsiteEditor() {
         }, 1200)
 
         return () => clearInterval(i)
-    }, { updateLoading })
+    }, [updateLoading])
 
 
     useEffect(() => {
@@ -75,7 +75,7 @@ function WebsiteEditor() {
                 setMessages(result.data.conversation)
             } catch (error) {
                 console.log(error)
-                setError(error.response.data.message)
+                setError(error.response?.data?.message || "Something went wrong")
             }
         }
         handleGetWebsite()
@@ -168,7 +168,7 @@ function WebsiteEditor() {
                     <div className='flex gap-2'>
                         {website.deployed ? "" :
                             <button className='flex items-center gap-2 px-4 py-1.5 rounded-lg bg-linear-to-r from-indigo-500 to-purple-500 text-sm font-semibold hover:scale-105 transition cursor-pointer'
-                                onClick={() => handleDeploy(website._id)}
+                                onClick={() => handleDeploy()}
                             >
                                 <Rocket size={16} /> Deploy
                             </button>

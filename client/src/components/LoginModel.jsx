@@ -73,7 +73,7 @@ function LoginModel({ open, onClose }) {
                                     className='group relative max-w-fit px-10 h-13 rounded-xl bg-white text-black hover:cursor-pointer font-semibold shadow-xl overflow-hidden'
                                     onClick={handleGoogleAuth}
                                 >
-                                    <div className='absolute inset-0 bg-gradient-to-r from-zinc-100 towhite opacity-0 group-hover:opacity-100 transition'></div>
+                                    <div className='absolute inset-0 bg-gradient-to-r from-zinc-100 to-white opacity-0 group-hover:opacity-100 transition'></div>
                                     <div className='relative flex items-center justify-center gap-3'>
                                         <img src="https://www.svgrepo.com/show/303108/google-icon-logo.svg" alt="/google" className='h-5 w-5' />
                                         Continue with Google

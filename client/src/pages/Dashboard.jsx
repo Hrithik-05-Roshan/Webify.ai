@@ -16,8 +16,8 @@ const Dashboard = () => {
 
     const handleDeploy = async (id) => {
         try {
-            const result = await axios.get(`${serverUrl}/api/website/deploy/${id}`,
-                { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/website/deploy/${id}`,
+                {}, { withCredentials: true })
             window.open(`${result.data.url}`, "_blank")
             setWebsites((prev) =>
                 prev.map((w) => w._id === id
@@ -39,7 +39,7 @@ const Dashboard = () => {
                 setLoading(false)
             } catch (error) {
                 console.log(error)
-                setError(error.response.data.message)
+                setError(error.response?.data?.message || "Something went wrong")
                 setLoading(false)
             }
         }
@@ -110,7 +110,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className='p-5 flex flex-col gap-4 flex-1' >
                                     <h3 className='text-base font-semibold line-clamp-2'>{w.title}</h3>
-                                    <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updateAt).toLocaleDateString()} </p>
+                                    <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updatedAt).toLocaleDateString()} </p>
                                     {!w.deployed ? (
                                         <button className='mt-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-semibold bg-linear-to-r from-indigo-500 to-purple-500 text-sm hover:scale-105 transition cursor-pointer'
                                             onClick={() => handleDeploy(w._id)}

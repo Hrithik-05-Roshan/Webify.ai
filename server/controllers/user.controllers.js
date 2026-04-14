@@ -1,5 +1,4 @@
-import { generateResponse } from "../config/openRouter.js";
-import extractJson from "../utils/extractJson.js";
+
 
 export const getCurrentUser = async (req, res)=>{
     try {

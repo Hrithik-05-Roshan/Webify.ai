@@ -12,7 +12,7 @@ const paymentSchema = new mongoose.Schema(
     credits: Number,
     razorpayPaymentId: String,
     razorpayOrderId: String,
-    Status: {
+    status: {
       type: String,
       enum: ["created", "paid", "failed"],
       default: "created",

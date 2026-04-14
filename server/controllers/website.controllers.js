@@ -167,7 +167,7 @@ export const generateWebsite = async (req, res) => {
         .json({ message: "you don't have enough credits!" });
     }
 
-    const finalPrompt = masterPrompt.replace("USER_PROMPT", prompt);
+    const finalPrompt = masterPrompt.replace("{USER_PROMPT}", prompt);
 
     let raw = "";
     let parsed = null;
@@ -181,7 +181,7 @@ export const generateWebsite = async (req, res) => {
       // console.log(raw ) //
       // console.log(parsed ) //
     }
-    if (!parsed.code) {
+    if (!parsed || !parsed.code) {
       console.log("AI returned invalid response");
       return res.status(400).json({ message: "AI returned invalid response" });
     }
@@ -281,7 +281,7 @@ export const changes = async (req, res) => {
         parsed = await extractJson(raw);
       }
     }
-    if (!parsed.code) {
+    if (!parsed || !parsed.code) {
       console.log("AI returned invalid response");
       return res.status(400).json({ message: "AI returned invalid response" });
     }
@@ -313,7 +313,7 @@ export const getAll = async (req, res) => {
     const websites = await Website.find({ user: req.user._id });
     return res.status(200).json(websites);
   } catch (error) {
-    return res.status(500).json({ message: `Get all websites error ${errro}` });
+    return res.status(500).json({ message: `Get all websites error ${error}` });
   }
 };
 

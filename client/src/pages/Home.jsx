@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from "motion/react";
 import LoginModel from '../components/LoginModel';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,18 +35,29 @@ const Home = () => {
             console.log(error)
         }
     }
+    const profileRef = useRef(null)
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setOpenProfile(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
     useEffect(() => {
         if (!userData) {
             return
         }
         const handleGetAllWebsites = async () => {
-
+            setLoading(true)
             try {
                 const result = await axios.get(`${serverUrl}/api/website/get-all`, { withCredentials: true })
                 setWebsites(result.data || [])
                 setLoading(false)
             } catch (error) {
                 console.log(error)
+                setLoading(false)
             }
         }
         handleGetAllWebsites()
@@ -84,7 +95,7 @@ const Home = () => {
                         >
                             Get Started
                         </button> :
-                            <div className='relative'>
+                            <div className='relative' ref={profileRef}>
                                 <button className='flex items-center cursor-pointer' onClick={() => setOpenProfile(!openProfile)}>
                                     <img src={userData.avatar || `https://ui-avatars.com/api/?name=${userData.name}`} alt="/profileimage" referrerPolicy='no-referrer' className='w-10 h-10 rounded-full border border-white/20 object-cover' />
                                 </button>

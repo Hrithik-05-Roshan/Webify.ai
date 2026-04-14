@@ -9,12 +9,21 @@ import Generate from './pages/Generate';
 import WebsiteEditor from './pages/Editor';
 import LiveSite from './pages/LiveSite';
 import Pricing from './pages/Pricing';
-export const serverUrl="https://webify-ai-orpy.onrender.com"
+export const serverUrl = import.meta.env.VITE_SERVER_URL || "https://webify-ai-orpy.onrender.com"
 
 
 const App = () => {
   useGetCurrentUser()
-  const {userData} = useSelector(state=>state.user)
+  const {userData, userLoading} = useSelector(state=>state.user)
+
+  if(userLoading){
+    return (
+      <div className='h-screen flex items-center justify-center bg-[#040404] text-white'>
+        <div className='text-lg text-zinc-400'>Loading...</div>
+      </div>
+    )
+  }
+
   return (
     <BrowserRouter>
       <Routes>
