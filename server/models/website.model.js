@@ -16,7 +16,8 @@ const websiteSchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-        required:true
+        required:true,
+        index: true // ⚡ Bolt: Add index to optimize 'find by user' queries
     },
     title:{
         type:String,

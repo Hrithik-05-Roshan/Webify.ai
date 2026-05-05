@@ -310,7 +310,8 @@ export const changes = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    const websites = await Website.find({ user: req.user._id });
+    // ⚡ Bolt: Exclude large 'conversation' array to reduce payload size and memory usage
+    const websites = await Website.find({ user: req.user._id }).select("-conversation");
     return res.status(200).json(websites);
   } catch (error) {
     return res.status(500).json({ message: `Get all websites error ${error}` });
