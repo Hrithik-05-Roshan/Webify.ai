@@ -21,7 +21,7 @@ function LoginModel({ open, onClose }) {
             dispatch(setUserData(data))
             onClose()
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
     }
 

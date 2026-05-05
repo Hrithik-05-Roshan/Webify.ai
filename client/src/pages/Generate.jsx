@@ -25,13 +25,14 @@ function Generate() {
     try {
       const result = await axios.post(`${serverUrl}/api/website/generate`, { prompt },
         { withCredentials: true })
+      console.log(result)
       setProgress(100)
       setLoading(false)
       navigate(`/editor/${result.data.websiteId}`)
     } catch (error) {
       setLoading(false)
       setError(error.response?.data?.message || "Something went wrong!")
-      console.error(error)
+      console.log(error)
     }
   }
 
