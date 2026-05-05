@@ -34,7 +34,7 @@ function WebsiteEditor() {
                 {}, { withCredentials: true })
             window.open(`${result.data.url}`, "_blank")
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
     }
 
@@ -46,12 +46,13 @@ function WebsiteEditor() {
         setMessages((m) => [...m, { role: "user", content: prompt }])
         try {
             const result = await axios.post(`${serverUrl}/api/website/update/${id}`, { prompt: text }, { withCredentials: true })
+            console.log(result)
             setUpdateLoading(false)
             setMessages((m) => [...m, { role: "ai", content: result.data.message }])
             setCode(result.data.code)
         } catch (error) {
             setUpdateLoading(false)
-            console.error(error)
+            console.log(error)
         }
     }
 
@@ -73,7 +74,7 @@ function WebsiteEditor() {
                 setCode(result.data.latestCode)
                 setMessages(result.data.conversation)
             } catch (error) {
-                console.error(error)
+                console.log(error)
                 setError(error.response?.data?.message || "Something went wrong")
             }
         }

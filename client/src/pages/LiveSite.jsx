@@ -16,7 +16,7 @@ function LiveSite() {
                 setHtml(result.data.latestCode)
 
             } catch (error) {
-                console.error(error)
+                console.log(error)
                 setError("Site not found")
             }
         }
