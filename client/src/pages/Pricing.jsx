@@ -101,7 +101,7 @@ function Pricing() {
                         window.location.href = "/dashboard"   
 
                     } catch (err) {
-                        console.log(err)
+                        console.error(err)
                         alert("Verification failed ❌")
                     }
                 }
@@ -111,7 +111,7 @@ function Pricing() {
             rzp.open()
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setLoadingPlan(false)
         }
     }
