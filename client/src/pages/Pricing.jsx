@@ -98,7 +98,7 @@ function Pricing() {
 
                         alert("Payment Successful 🎉")
 
-                        window.location.href = "/dashboard"   
+                        navigate("/dashboard")
 
                     } catch (err) {
                         console.log(err)
