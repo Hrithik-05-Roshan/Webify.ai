@@ -5,7 +5,7 @@
 
 ---
 
-## 🌐 Project Description
+## 🌐 Project Overview
 
 **Webify.ai** is a production-ready SaaS platform that allows users to generate fully functional websites using AI and deploy them instantly with a single click.
 
@@ -67,10 +67,12 @@ Users simply describe their idea, and the platform generates a complete website 
 Webify.ai/
 │
 ├── client/            # React frontend
-│   ├── components/
-│   ├── pages/
-│   ├── animations/
-│   └── utils/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── redux/
+│   │   └── utils/
+│   └── public/
 │
 ├── server/            # Node.js backend
 │   ├── controllers/
@@ -79,14 +81,13 @@ Webify.ai/
 │   ├── middleware/
 │   └── services/
 │
-├── config/
 ├── .env
 └── README.md
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## ⚙️ Setup Guide
 
 ### 1. Clone the repository
 ```bash
@@ -116,14 +117,20 @@ Create a `.env` file in the server folder:
 
 ```env
 PORT=5000
+FRONTEND_URL=your_deployed_frontend_url # Fallback provided in codebase
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secret
 
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-RAZORPAY_SECTER_KEY=your_stripe_secret
-RAZORPAY_TEST_KEY=your_webhook_secret
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_SECRET_KEY=your_razorpay_secret_key
+```
 
-CLIENT_URL=your_deployed_url
+Create a `.env` file in the client folder:
+
+```env
+VITE_SERVER_URL=your_deployed_server_url
+VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
+VITE_FIREBASE_API_KEY=your_firebase_api_key
 ```
 
 ---
@@ -139,7 +146,7 @@ npm run dev
 #### Start frontend
 ```bash
 cd client
-npm start
+npm run dev
 ```
 
 ---
@@ -154,11 +161,17 @@ npm start
 
 ---
 
-## 📦 Deployment
+## 📦 Deployment (Render)
 
-- Frontend → Render  
-- Backend → Render  
-- Database → MongoDB Atlas  
+- **Frontend (Static Site)** → Deploy `client` folder to Render.
+  - **SPA Routing Fix**: Render does not natively support SPA fallbacks via `_redirects`. To fix 404s on refresh or direct URL access (like `/dashboard`), you must add a rewrite rule in the Render Dashboard:
+    - Go to **Redirects/Rewrites** settings for your static site on Render.
+    - Add a new rule:
+      - **Source**: `/*`
+      - **Destination**: `/index.html`
+      - **Action**: `Rewrite`
+- **Backend (Web Service)** → Deploy `server` folder to Render.
+- **Database** → MongoDB Atlas.
 
 ---
 

@@ -72,8 +72,7 @@ function Pricing() {
         const selectedPlan = plans.find(p => p.key === planKey)
         setLoadingPlan(planKey)
         try {
-            const result = await axios.post
-                (`${serverUrl}/api/payment/order`,
+            const result = await axios.post(`${serverUrl}/api/payment/order`,
                     {
                         planId: planKey,
                         amount: parseInt(selectedPlan.price.replace("₹", "")), // or hardcode
@@ -98,7 +97,7 @@ function Pricing() {
 
                         alert("Payment Successful 🎉")
 
-                        window.location.href = "/dashboard"   
+                        navigate("/dashboard")
 
                     } catch (err) {
                         console.log(err)
