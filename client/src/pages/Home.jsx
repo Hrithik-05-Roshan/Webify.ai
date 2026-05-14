@@ -32,7 +32,7 @@ const Home = () => {
                 setWebsites(null)
                 navigate("/")
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
     const profileRef = useRef(null)
@@ -56,7 +56,7 @@ const Home = () => {
                 setWebsites(result.data || [])
                 setLoading(false)
             } catch (error) {
-                console.log(error)
+                console.error(error)
                 setLoading(false)
             }
         }
