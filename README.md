@@ -46,7 +46,7 @@ Users simply describe their idea, and the platform generates a complete website 
 - React.js  
 - Tailwind CSS  
 - Framer Motion 
-- Lucid-React icons 
+- Lucide-React icons
 
 ### Backend
 - Node.js  
@@ -67,10 +67,12 @@ Users simply describe their idea, and the platform generates a complete website 
 Webify.ai/
 │
 ├── client/            # React frontend
-│   ├── components/
-│   ├── pages/
-│   ├── animations/
-│   └── utils/
+│   ├── public/        # Static assets (including SPA _redirects)
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── animations/
+│   │   └── utils/
 │
 ├── server/            # Node.js backend
 │   ├── controllers/
@@ -112,7 +114,7 @@ npm install
 
 ### 3. Environment Variables
 
-Create a `.env` file in the server folder:
+Create a `.env` file in the server folder. Here is an example of what is needed:
 
 ```env
 PORT=5000
@@ -120,10 +122,10 @@ MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secret
 
 VITE_FIREBASE_API_KEY=your_firebase_api_key
-RAZORPAY_SECTER_KEY=your_stripe_secret
-RAZORPAY_TEST_KEY=your_webhook_secret
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_SECRET_KEY=your_razorpay_secret_key
 
-CLIENT_URL=your_deployed_url
+FRONTEND_URL=your_deployed_frontend_url
 ```
 
 ---
@@ -139,7 +141,7 @@ npm run dev
 #### Start frontend
 ```bash
 cd client
-npm start
+npm run dev
 ```
 
 ---
@@ -159,6 +161,14 @@ npm start
 - Frontend → Render  
 - Backend → Render  
 - Database → MongoDB Atlas  
+
+### SPA Routing Fallback on Render
+For static frontend deployments on Render, SPA routing fallbacks require configuring rewrite rules directly in the Render dashboard, as Render does not automatically process `client/public/_redirects` files like Netlify.
+
+If you experience 404 errors when refreshing pages like `/dashboard` on Render, ensure you set up a rewrite rule in your Render static site settings:
+*   **Source:** `/*`
+*   **Destination:** `/index.html`
+*   **Action:** `Rewrite`
 
 ---
 
