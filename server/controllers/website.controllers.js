@@ -157,7 +157,6 @@ export const generateWebsite = async (req, res) => {
       return res.status(400).json({ message: "prompt is required" });
     }
     const user = await User.findById(req.user._id);
-    // console.log(user) //
     if (!user) {
       return res.status(400).json({ message: "user not found!" });
     }
@@ -178,11 +177,9 @@ export const generateWebsite = async (req, res) => {
         raw = await generateResponse(finalPrompt + "\n\nRETURN ONLY RAW JSON");
         parsed = await extractJson(raw);
       }
-      // console.log(raw ) //
-      // console.log(parsed ) //
     }
     if (!parsed || !parsed.code) {
-      console.log("AI returned invalid response");
+      console.error("AI returned invalid response");
       return res.status(400).json({ message: "AI returned invalid response" });
     }
 
@@ -247,7 +244,6 @@ export const changes = async (req, res) => {
     }
     const user = await User.findById(req.user._id);
 
-    // console.log(user) //
     if (!user) {
       return res.status(400).json({ message: "user not found!" });
     }
@@ -282,7 +278,7 @@ export const changes = async (req, res) => {
       }
     }
     if (!parsed || !parsed.code) {
-      console.log("AI returned invalid response");
+      console.error("AI returned invalid response");
       return res.status(400).json({ message: "AI returned invalid response" });
     }
 
@@ -336,7 +332,7 @@ export const deploy = async (req, res) => {
           .slice(0, 60) + website._id.toString().slice(-5);
     }
     website.deployed = true
-    website.deployUrl = `${process.env.FRONTEND_URL}/site/${website.slug}`
+    website.deployUrl = `${process.env.FRONTEND_URL || "https://webify-ai-1.onrender.com"}/site/${website.slug}`
     await website.save()
 
     return res.status(200).json({

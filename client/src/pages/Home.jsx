@@ -32,7 +32,7 @@ const Home = () => {
                 setWebsites(null)
                 navigate("/")
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
     const profileRef = useRef(null)
@@ -56,7 +56,7 @@ const Home = () => {
                 setWebsites(result.data || [])
                 setLoading(false)
             } catch (error) {
-                console.log(error)
+                console.error(error)
                 setLoading(false)
             }
         }
@@ -192,8 +192,10 @@ const Home = () => {
                 <section className='max-w-7xl mx-auto px-6 pb-32'>
                     <h3 className='text-2xl font-semibold mb-6'>Your Websites</h3>
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-                        {websites.slice(0, 3).map((w, i) => (
-                            <motion.div
+                        {websites.map((w, i) => {
+                            if (i >= 3) return null;
+                            return (
+                                <motion.div
                                 key={w._id}
                                 whileHover={{ y: -6 }}
                                 onClick={() => navigate(`/editor/${w._id}`)}
@@ -210,7 +212,8 @@ const Home = () => {
                                     <p className='text-xs text-zinc-400'>Last Updated {""}{new Date(w.updatedAt).toLocaleDateString()} </p>
                                 </div>
                             </motion.div>
-                        ))}
+                            )
+                        })}
 
                     </div>
                 </section>

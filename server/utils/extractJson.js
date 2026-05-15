@@ -14,7 +14,7 @@ const extractJson = async (text) => {
     const jsonString = cleaned.slice(firstBrace, closeBrace + 1);
     return JSON.parse(jsonString);
   } catch (error) {
-    console.log("JSON parse error:", error.message);
+    console.error("JSON parse error:", error.message);
     return null;
   }
 };
