@@ -335,8 +335,10 @@ export const deploy = async (req, res) => {
           .replace(/[^a-z0-9]/g, "")
           .slice(0, 60) + website._id.toString().slice(-5);
     }
+    const frontendUrl = process.env.FRONTEND_URL || "https://webify-ai-1.onrender.com";
+
     website.deployed = true
-    website.deployUrl = `${process.env.FRONTEND_URL}/site/${website.slug}`
+    website.deployUrl = `${frontendUrl}/site/${website.slug}`
     await website.save()
 
     return res.status(200).json({
