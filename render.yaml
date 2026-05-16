@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: webify-ai-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: FRONTEND_URL
+        value: "https://webify-ai-1.onrender.com"
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_SECRET_KEY
+        sync: false
+    rootDir: server
+
+  - type: web
+    name: webify-ai-client
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_SERVER_URL
+        value: "https://webify-ai-orpy.onrender.com"
+      - key: VITE_FIREBASE_API_KEY
+        sync: false
+    rootDir: client
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
