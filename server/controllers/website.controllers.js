@@ -336,7 +336,7 @@ export const deploy = async (req, res) => {
           .slice(0, 60) + website._id.toString().slice(-5);
     }
     website.deployed = true
-    website.deployUrl = `${process.env.FRONTEND_URL}/site/${website.slug}`
+    website.deployUrl = `${process.env.FRONTEND_URL || "https://webify-ai-1.onrender.com"}/site/${website.slug}`
     await website.save()
 
     return res.status(200).json({
