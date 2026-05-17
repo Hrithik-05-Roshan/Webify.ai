@@ -26,7 +26,7 @@ const Dashboard = () => {
                 )
             )
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -38,7 +38,7 @@ const Dashboard = () => {
                 setWebsites(result.data || [])
                 setLoading(false)
             } catch (error) {
-                console.log(error)
+                console.error(error)
                 setError(error.response?.data?.message || "Something went wrong")
                 setLoading(false)
             }
